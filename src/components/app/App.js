@@ -1,17 +1,24 @@
 import './App.css';
-import Simpsons from "../main/simpsons/simpsons";
-import Users from "../main/users/Users";
-import Comments1 from "../main/homework1/comments1";
-import Usersdop from "../main/homework1/dop1/usersdop";
+import {useEffect, useState} from "react";
+import {getUsers,getUser} from "../sevisec/Api";
+import Users from "../users/Users";
+
+export function App() {
+
+    let appFn = (id) => {
+        getUser(id).then(value => console.log(value.data))
+    }
+
+    let [users, setUsers] = useState([]);
+
+    useEffect(() => {
+        getUsers().then(value => setUsers(value.data))
+    },[]);
 
 
-
-function App() {
-  return(
-      <div>
-        <Users/>
-      </div>
-  )
+    return (<div>
+        <Users  items={users} appFn={appFn}/>
+    </div>)
 }
 
 export default App;
