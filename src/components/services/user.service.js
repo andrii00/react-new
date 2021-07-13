@@ -1,13 +1,13 @@
-export class UserService {
-    static async getUsers() {
-        const usersResponse = await fetch("https://jsonplaceholder.typicode.com/users");
+import axios from "axios";
 
-        return usersResponse.json();
-    }
+let axiosInstance =  axios.create({baseURL: 'https://jsonplaceholder.typicode.com'});
 
-    static async getUserPosts(id) {
-        const usersResponse = await fetch(`https://jsonplaceholder.typicode.com/users/${id}/posts`);
+const getUsers = () =>{
+     return axiosInstance.get('/users')
+};
 
-        return usersResponse.json();
-    }
-}
+const getUser = (id) =>{
+    return axiosInstance.get('/users/'+ id)
+};
+
+export {getUsers, getUser};

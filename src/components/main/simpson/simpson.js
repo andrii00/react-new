@@ -13,13 +13,10 @@ export default function Simpson ({item:{name, surname, age, photo}}){
             <button onClick={() => {
                 if (toggle === 'hide'){
                    setToggle('show')
-                }else if(
-                    toggle === 'show'
-                ){
+                }else if(toggle === 'show')
+                {
                     setToggle ('hide')
                 }
-
-
             } }>HIDE SHOW</button>
             </div>
         </div>
