@@ -1,32 +1,57 @@
 import './App.css';
-import {getPosts, getPost} from "../sevisec/Api";
-import {useEffect, useState} from "react";
+import {useReducer} from "react";
+import {BrowserRouter as Router, Link, Route} from "react-router-dom";
+import Users from "../users/Users";
 import Posts from "../posts/Posts";
+import Comments from "../comments/Comments";
+
+// function reducer(state, action) {
+//    switch (action.type){
+//        case "A":
+//            return {...state, a:state.a + action.payload};
+//        case "B":
+//            return {...state, b:state.b + action.payload};
+//        default:
+//            return {...state}
+//    }
+// }
+//
+//
+// export function App() {
+//
+// let [state,dispatch] = useReducer(reducer,{a:0, b:0});
+//
+//     return (
+//         <div>
+//             <button onClick={() => {dispatch({type:'A', payload:1 })}}>inc a - {state.a}</button>
+//             <br/>
+//             <button onClick={() => {dispatch({type:'B', payload:1 })}}>inc b - {state.b}</button>
+//         </div>
+//     )
+//
+// }
+
 
 export function App() {
-    const [post, setPost] = useState(null)
-
-    let appFn = (id) =>{
-        {
-            getPost(id).then(value => setPost(value.data))
-        }
-    }
-
-    let [posts, setPosts] = useState([])
-
-    useEffect(() => {
-        getPosts().then(value => setPosts(value.data))
-    })
-
-
     return (
-        <div>
-            <Posts items={posts} appFn={appFn}/>
+        <Router>
+            <div>
+                <Link to={'/'}>Home</Link>
+                <br/>
+                <Link to={'/users'}> to users</Link>
+                <br/>
+                <Link to={'/posts'}> to posts</Link>
+                <br/>
+                <Link to={'/comments'}> to comments</Link>
 
-            {
-                post && <div>{JSON.stringify(post)}</div>
-            }
-        </div>
+
+                <Route exact path={'/'} render={()=> <div>Home Page</div>}/>
+                <Route exact path={'/users'} render={() => <Users/>}/>
+                <Route path={'/posts'} component={Posts}/>
+                <Route path={'/comments'}><Comments/>
+                </Route>
+            </div>
+        </Router>
     )
 }
 
