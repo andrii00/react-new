@@ -13,5 +13,7 @@ const getPosts = () => axiosInstance('/posts')
 // const getPost = (id) => axiosInstance(`/posts/${id}`)
 const getComments = () => axiosInstance('/comments')
 
+const getParams = (id) => axiosInstance('/users/'+ id)
 
-export {getUsers, getPosts, getComments};
+
+export {getUsers, getPosts, getComments, getParams};

@@ -1,6 +1,6 @@
 import './App.css';
 import {useReducer} from "react";
-import {BrowserRouter as Router, Link, Route} from "react-router-dom";
+import {BrowserRouter as Router, Link, Route, Switch} from "react-router-dom";
 import Users from "../users/Users";
 import Posts from "../posts/Posts";
 import Comments from "../comments/Comments";
@@ -44,12 +44,12 @@ export function App() {
                 <br/>
                 <Link to={'/comments'}> to comments</Link>
 
-
-                <Route exact path={'/'} render={()=> <div>Home Page</div>}/>
-                <Route exact path={'/users'} render={() => <Users/>}/>
-                <Route path={'/posts'} component={Posts}/>
-                <Route path={'/comments'}><Comments/>
-                </Route>
+                <Switch>
+                    <Route path={'/posts'} component={Posts}/>
+                    <Route path={'/comments'}><Comments/></Route>
+                    <Route path={'/users'} render={(props) => <Users {...props}/>}/>
+                    <Route path={'/'} render={() => <div>Home Page</div>}/>
+                </Switch>
             </div>
         </Router>
     )

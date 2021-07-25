@@ -1,8 +1,18 @@
-export default function User ({item:{id,name}}){
+import {Link} from 'react-router-dom'
 
-    return(
+export default function User({item ,item:{id, name}}) {
+
+    return (
         <div>
-            <h3>{id} - {name}</h3>
+            {id} - {name}
+            {/*- <Link to={url + '/' + id}>user details</Link>*/}
+            - <Link to={
+            {
+                pathname:'/users/'+ id,
+                state:item
+            }
+
+        }>user details</Link>
         </div>
     )
 
