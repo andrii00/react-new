@@ -1,8 +1,7 @@
-export default function Post({item: {id, title}}) {
-    return (
+export default function Post ({singlePost}){
+    return(
         <div>
-            <hr/>
-            <h4>{id} - {title}</h4>
+            {singlePost.id} - {singlePost.title}
         </div>
     )
 }
