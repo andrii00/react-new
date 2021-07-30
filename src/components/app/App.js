@@ -1,28 +1,36 @@
 import './App.css';
-import {useEffect, useState} from "react";
-import {getAllUsers} from "../sevices/users.api";
-import Users from "../users/Users";
+import {
+    BrowserRouter as Router,
+    Link,
+    Route,
+    Switch
 
+} from "react-router-dom";
+import Users from "../users/Users";
+import {useEffect, useState} from "react";
+import {getAllUsers} from "../services/User-Api";
 
 export function App() {
 
-    let [users, setUsers] = useState([])
-    let [user,setUser] = useState({})
+   let [users, setUsers] =useState([])
+    let [user, setUser] = useState({})
+useEffect(() => {
+    getAllUsers().then(value => setUsers([...value]))
+},[]);
 
-    useEffect(() => {
-        getAllUsers().then(value => setUsers([...value]))
-    })
-    const fromApp = (id) => {
-        setUser({...users.find(value => value.id === id)})
-    }
+   const  fromApp = (id) => {
+        let chosenUserOnClick = users.find (value => value.id === id);
+    setUser({...chosenUserOnClick})
+   }
 
-    return(
-        <div>
-            <h3>{user.username}</h3>
-            <Users usersList={users} fromApp={fromApp}/>
-        </div>
+
+    return (
+       <div>
+           {user.name}
+           <Users usersList={users} fromApp={fromApp}/>
+       </div>
+
     )
-
 }
 
 export default App;

@@ -1,13 +1,14 @@
 import Post from "../post/Post";
 
-export default function Posts ({posts}){
+export default function Posts({postList}) {
 
-    return(
+    return (
         <div>
+
             {
-                posts.map(val => <Post key={val.id} singlePost={val}/>)
+                postList.map(value => <Post key={value.id} singlePost={value}/>)
             }
+
         </div>
     )
-
 }

@@ -1,7 +1,9 @@
-export default function Post ({singlePost}){
-    return(
+export default function Post({singlePost}) {
+
+    return (
         <div>
-            {singlePost.id} - {singlePost.title}
+
+           <i>{singlePost.id} - {singlePost.title}</i>
         </div>
     )
 }
