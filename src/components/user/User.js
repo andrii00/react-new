@@ -1,28 +1,17 @@
-import {Link} from "react-router-dom";
+import {Link, Route} from "react-router-dom";
 import {useState} from "react";
 import {getPostsOfUser} from "../services/Post-Api";
 import Posts from "../posts/Posts";
 
-export default function User({singleUser, fromApp}) {
-    let [posts, setPosts] = useState([]);
+export default function User({item}) {
 
-    const getPosts = () => {
-        getPostsOfUser(singleUser.id).then(value => setPosts([...value]))
-    }
 
     return (
         <div>
-            {singleUser.id} - {singleUser.name} - <button
-            onClick={() => {
-                fromApp(singleUser.id)
-                getPosts()
-            }}
-        >
-            choose this user
-        </button>
-            <div>
-                <Posts postList={posts}/>
-            </div>
+            {item.name} - <Link to={'/users/' + item.id}> posts </Link>
+
+
+            <Route path={'/users/' + item.id} render={()=><Posts itemId={item.id}/>}/>
         </div>
     )
 }

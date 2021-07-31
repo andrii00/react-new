@@ -9,27 +9,28 @@ import {
 import Users from "../users/Users";
 import {useEffect, useState} from "react";
 import {getAllUsers} from "../services/User-Api";
+import Posts from "../posts/Posts";
+import CommentsToPosts from "../commentsToPosts/CommentsToPosts";
 
 export function App() {
 
-   let [users, setUsers] =useState([])
-    let [user, setUser] = useState({})
-useEffect(() => {
-    getAllUsers().then(value => setUsers([...value]))
-},[]);
-
-   const  fromApp = (id) => {
-        let chosenUserOnClick = users.find (value => value.id === id);
-    setUser({...chosenUserOnClick})
-   }
-
 
     return (
-       <div>
-           {user.name}
-           <Users usersList={users} fromApp={fromApp}/>
-       </div>
+      <Router>
+          <div>
+              <Link to={'/users'}>users page</Link>
+              <hr/>
+              <Link to={'/posts'}>posts page</Link>
+              <hr/>
 
+          </div>
+
+          <Switch>
+              <Route path={'/users'} component={Users}/>
+              <Route path={'/posts'} component={CommentsToPosts}/>
+          </Switch>
+
+      </Router>
     )
 }
 
