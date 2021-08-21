@@ -1,95 +1,138 @@
 import './App.css';
 import {useDispatch, useSelector} from 'react-redux'
 import {useEffect, useState} from "react";
+import {addToDos, pushNewToDo, removeToDo, setLoadingFalse, setLoadingTrue} from "../actionCreators";
+import {DELETE_TO_DO} from "../actionTypes/ActionTypes";
 
-const NestedChild = () => {
+const CreateToDoForm = ({onSubmit}) => {
+    const [title, setTitle] = useState('');
+    const [description, setDescription] = useState('');
+    const [loading, setLoading] = useState(false);
 
-    const counter = useSelector(({counter: {value}}) => value)
-    const dispatch = useDispatch();
-    const posts = useSelector(({posts}) => posts)
 
-    const fetchPosts = async () => {
-        const responsePromise = await fetch('https://jsonplaceholder.typicode.com/posts')
-        const json = await responsePromise.json()
-
-        dispatch({
-            type: 'ADD_POSTS',
-            payload: json
-        })
-    }
-
-    useEffect(() => {
-        fetchPosts()
-    }, [])
-
-    console.log(posts);
-
-    let [inputNumers, setInputNumbers] = useState(null);
-
-    function onSubmit(e) {
+    const handleSubmit = async (e) => {
         e.preventDefault()
-    }
 
-    function onChange(e) {
-        setInputNumbers(e.target.value)
+        if (!title || !description || loading) return;
 
-    }
+
+        try {
+            setLoading(true);
+            await onSubmit(title, description);
+            setTitle('');
+            setDescription('');
+        } catch (e) {
+            console.log(e);
+        } finally {
+            setLoading(false);
+        }
+
+    };
 
     return (
-        <div>
+        <form onSubmit={handleSubmit}>
+            <input type="text"
+                   placeholder={'title'}
+                   value={title}
+                   onChange={({target: {value}}) => {
+                       setTitle(value)
+                   }
+                   }/>
+            <br/>
+            <input type="text"
+                   placeholder={'description'}
+                   value={description}
+                   onChange={({target: {value}}) => setDescription(value)}/>
+            <br/>
+            <button type={'submit'} disabled={!title || !description || loading}>create todo</button>
 
-            <div>
-                <form onSubmit={onSubmit}>
-                    <input type="number" name={'inputNumbers'} onChange={onChange}/>
-                    <button onClick={() => {
-                        dispatch({
-                            type: 'INPUT_NUMBER',
-                            payload: inputNumers
-                        })
-                    }}>input numbers
-                    </button>
-                </form>
-            </div>
-
-
-            <h1>{counter}</h1>
-            <hr/>
-            <button onClick={() => {
-                dispatch({type: 'INC'})
-            }
-            }>
-                inc
-            </button>
-            <button onClick={() => {
-                dispatch({type: 'DEC'})
-            }
-            }>
-                dec
-            </button>
-            <button onClick={() => {
-                dispatch({type: 'RES'})
-            }
-            }>
-                RES
-            </button>
-
-            <ul>
-                {posts.map(post => (
-                    <li key={post.id}>
-                        {post.id} - {post.title}
-                    </li>
-                ))}
-            </ul>
-
-        </div>
-
+        </form>
     )
 }
 
-export function App() {
+
+const TodoList = ({todos, isLoading, todoDelete}) => {
+
+
+    if (isLoading) return <h1>LOADING......></h1>
+
     return (
         <div>
-            <NestedChild/>
+            {
+                todos.map(todo => (
+                    <div>
+                        <h4>{todo.title}</h4>
+                        <p>{todo.description}</p>
+                        <span>Is completed: {todo.completed.toString()}</span>
+                        <br/>
+                        <span>Created at: {new Date(todo.createdAt).toLocaleString()}</span>
+                        <br/>
+                        <br/>
+                        <button onClick={() => todoDelete(todo.id)}>delete</button>
+                        <hr/>
+
+                    </div>
+                ))
+            }
+        </div>
+    )
+
+}
+
+
+export function App() {
+    const {todos, isLoading} = useSelector(({todosReducer}) => todosReducer)
+    const dispatch = useDispatch();
+
+    useEffect(() => {
+        fetchTodos()
+    }, [])
+
+    const fetchTodos = async () => {
+        try {
+            dispatch(setLoadingTrue())
+            const response = await fetch('http://localhost:8888/get-todos');
+            const data = await response.json();
+            dispatch(addToDos(data));
+
+        } catch (e) {
+            console.log(e);
+        } finally {
+            dispatch(setLoadingFalse());
+        }
+    }
+
+    const onToDoCreate = async (title, description) => {
+        if (!title || !description) return;
+
+        const response = await fetch('http://localhost:8888/create-todo', {
+            method: 'POST',
+            body: JSON.stringify({title, description}),
+            headers: {
+                'Content-Type': 'application/json'
+            },
+
+        });
+        const data = await response.json();
+
+        dispatch(pushNewToDo(data))
+    }
+
+    const deleteTodo = async (id) => {
+
+        await fetch('http://localhost:8888/delete-todo/' + id, {
+            method: 'DELETE',
+        });
+
+        dispatch({type: DELETE_TO_DO, payload: id})
+    }
+
+
+
+    return (
+        <div className={'App'}>
+            <CreateToDoForm onSubmit={onToDoCreate}/>
+            <TodoList todos={todos} isLoading={isLoading} todoDelete={deleteTodo} />
         </div>
     )
 }

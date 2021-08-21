@@ -5,65 +5,7 @@ import App from './components/app/App';
 import reportWebVitals from './reportWebVitals';
 import {createStore} from "redux";
 import {Provider} from "react-redux";
-
-const initialState = {
-    counter: {
-        value: 0
-    },
-    posts:[]
-}
-
-const reducer = (state = initialState, action) => {
-    switch (action.type) {
-        case 'INC': {
-            return {
-                ...state,
-                counter: {
-                    value: state.counter.value + 1
-                }
-            }
-        }
-        case 'DEC': {
-            return {
-                ...state,
-                counter: {
-                    value: state.counter.value - 1
-                }
-            }
-        }
-        case 'RES': {
-            return {
-                ...state,
-                counter: {
-                    value: state.counter.value = 0
-                }
-            }
-        }
-
-        case 'ADD_POSTS':{
-            return {
-                ...state,
-                posts:action.payload
-            }
-        }
-
-        case 'INPUT_NUMBER':{
-            return {
-                ...state,
-                counter: {
-                    value: state.counter.value = action.payload
-                }
-            }
-        }
-
-
-        default:
-            return state
-    }
-}
-
-
-const store = createStore(reducer);
+import {store} from "./components/redux";
 
 ReactDOM.render(
     <React.StrictMode>
